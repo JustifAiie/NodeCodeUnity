@@ -2,15 +2,25 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
-
+using UnityEditor.Callbacks;
 
 public class NodeCodeEditor : EditorWindow
 {
     [MenuItem("NodeCode/NodeCodeEditor")]
-    public static void OpenWindow()
+
+    [OnOpenAsset()]
+    public static bool OpenWindow(int instanceID, int line)
     {
-        NodeCodeEditor wnd = GetWindow<NodeCodeEditor>();
-        wnd.titleContent = new GUIContent("NodeCodeEditor");
+        if (EditorUtility.InstanceIDToObject(instanceID) is NodeCode)
+        {
+            NodeCodeEditor wnd = GetWindow<NodeCodeEditor>();
+            wnd.titleContent = new GUIContent("NodeCodeEditor");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void CreateGUI()

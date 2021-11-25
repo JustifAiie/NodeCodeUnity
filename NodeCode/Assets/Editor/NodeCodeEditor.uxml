@@ -10,7 +10,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="rightPanel">
             <ui:Label text="Inspector" display-tooltip-when-elided="true" style="background-color: rgb(37, 37, 37);" />
-            <InspectorView />
+            <InspectorView name="InspectorView" />
         </ui:VisualElement>
     </SplitView>
 </ui:UXML>
