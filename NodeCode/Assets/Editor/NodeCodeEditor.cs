@@ -8,11 +8,13 @@ using UnityEngine.Events;
 
 public class NodeCodeEditor : EditorWindow
 {
-    static NodeCode currentNC;
+    public static NodeCodeEditor Instance;
 
     public Button CreateButton;
     public NodeCodeView CodeView;
 
+    static NodeCode currentNC;
+    
     [OnOpenAsset()]
     public static bool OpenWindowFromAsset(int instanceID, int line)
     {
@@ -23,6 +25,7 @@ public class NodeCodeEditor : EditorWindow
             wnd.titleContent = new GUIContent("NodeCodeEditor - " + opened.name);
 
             currentNC = opened as NodeCode;
+
             return true;
         }
 
@@ -31,6 +34,8 @@ public class NodeCodeEditor : EditorWindow
 
     public void CreateGUI()
     {
+        Instance = this;
+
         // Each editor window contains a root VisualElement object
         VisualElement root = rootVisualElement;
 
@@ -43,24 +48,41 @@ public class NodeCodeEditor : EditorWindow
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/NodeCodeEditor.uss");
         root.styleSheets.Add(styleSheet);
 
-        CreateButton = root.Q<Button>("createButton");
-        CreateButton.clicked += CreateButtonPressed;
+        /*CreateButton = root.Q<Button>("createButton");
+        CreateButton.clicked += CreateButtonPressed;*/
 
         CodeView = root.Q<NodeCodeView>();
 
         CodeView.graphViewChanged = OnGraphChange;
+
+        /*foreach (Node node in currentNC.Nodes)
+        {
+            RefreshNodeAfterClose(node.GetPosition());
+        }*/
     }   
 
-    void CreateButtonPressed()
+    public void CreateNode()
     {
         Node newNode = new NodeInstantiate();
-
+        
         currentNC.Nodes.Add(newNode);
         Debug.Log(currentNC.Nodes.Count);
+        
 
         CodeView.AddElement(newNode);
 
     }
+
+    /*public void RefreshNodeAfterClose(Rect position)
+    {
+        Node newNode = new NodeInstantiate();
+        newNode.SetPosition(position);
+
+        Debug.Log(currentNC.Nodes.Count);
+
+
+        CodeView.AddElement(newNode);
+    }*/
 
     private GraphViewChange OnGraphChange(GraphViewChange change)
     {

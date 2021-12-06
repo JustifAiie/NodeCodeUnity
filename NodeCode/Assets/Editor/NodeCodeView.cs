@@ -18,10 +18,25 @@ public class NodeCodeView : GraphView
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(new SelectionDragger());
         this.AddManipulator(new RectangleSelector());
+        /*this.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
+        {
+            Debug.Log("Right click !");
+        }));*/
 
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/NodeCodeEditor.uss");
         styleSheets.Add(styleSheet);
     }
 
-    
+    public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+    {   
+
+        if (evt.target is GraphView)
+        {
+            evt.menu.AppendAction("Create", (e) => { NodeCodeEditor.Instance.CreateNode(); });
+        }
+        else
+        {
+            base.BuildContextualMenu(evt);
+        }
+    }
 }
