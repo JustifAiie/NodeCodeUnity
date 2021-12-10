@@ -25,6 +25,8 @@ public class NodeCodeView : GraphView
 
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/NodeCodeEditor.uss");
         styleSheets.Add(styleSheet);
+
+        AddElement(GenerateStartNode());
     }
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -38,5 +40,37 @@ public class NodeCodeView : GraphView
         {
             base.BuildContextualMenu(evt);
         }
+    }
+
+    private CustomNode GenerateStartNode()
+    {
+        CustomNode startNode = new CustomNode
+        {
+            title = "Start",
+            GUID = System.Guid.NewGuid().ToString(),
+            EntryPoint = true,
+        };
+
+        Port newPort = startNode.GeneratePort(Direction.Output, typeof(string));
+        newPort.portName = "Next";
+        startNode.outputContainer.Add(newPort);
+
+        startNode.FullRefresh();
+
+        return startNode;
+    }
+
+    public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+    {
+        List<Port> compatiblePorts = new List<Port>();
+        ports.ForEach((port) =>
+        {
+            if (startPort != port && startPort.node != port.node && startPort.portType == port.portType)
+            {
+                compatiblePorts.Add(port);
+            }
+        });
+
+        return compatiblePorts;
     }
 }

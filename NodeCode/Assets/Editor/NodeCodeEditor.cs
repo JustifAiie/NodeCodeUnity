@@ -63,7 +63,7 @@ public class NodeCodeEditor : EditorWindow
 
     public void CreateNode()
     {
-        Node newNode = new NodeInstantiate();
+        CustomNode newNode = new NodeDebug();
         
         currentNC.Nodes.Add(newNode);
         Debug.Log(currentNC.Nodes.Count);
@@ -90,7 +90,7 @@ public class NodeCodeEditor : EditorWindow
         {
             foreach (var item in change.elementsToRemove)
             {
-                Node node = item as Node;
+                CustomNode node = item as CustomNode;
                 if (node != null)
                 {
                     currentNC.Nodes.Remove(node);

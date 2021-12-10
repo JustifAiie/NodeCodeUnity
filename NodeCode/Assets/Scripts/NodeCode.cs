@@ -7,7 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "NodeCode")]
 public class NodeCode : ScriptableObject
 {
-    public List<Node> Nodes = new List<Node>();
+    public List<CustomNode> Nodes = new List<CustomNode>();
     
     
 }
