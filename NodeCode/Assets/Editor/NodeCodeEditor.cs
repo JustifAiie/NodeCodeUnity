@@ -13,23 +13,13 @@ public class NodeCodeEditor : EditorWindow
     public Button CreateButton;
     public NodeCodeView CodeView;
 
-    static NodeCode currentNC;
+    private string _fileName;
     
-    [OnOpenAsset()]
-    public static bool OpenWindowFromAsset(int instanceID, int line)
+    [MenuItem("Node Code/Editor")]
+    public static void OpenWindow()
     {
-        Object opened = EditorUtility.InstanceIDToObject(instanceID);
-        if (opened is NodeCode)
-        {
-            NodeCodeEditor wnd = GetWindow<NodeCodeEditor>();
-            wnd.titleContent = new GUIContent("NodeCodeEditor - " + opened.name);
-
-            currentNC = opened as NodeCode;
-
-            return true;
-        }
-
-        return false;
+        NodeCodeEditor wnd = GetWindow<NodeCodeEditor>();
+        wnd.Show();
     }
 
     public void CreateGUI()
@@ -48,57 +38,39 @@ public class NodeCodeEditor : EditorWindow
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/NodeCodeEditor.uss");
         root.styleSheets.Add(styleSheet);
 
-        /*CreateButton = root.Q<Button>("createButton");
-        CreateButton.clicked += CreateButtonPressed;*/
-
         CodeView = root.Q<NodeCodeView>();
 
-        CodeView.graphViewChanged = OnGraphChange;
+        var fileNameText = root.Q<TextField>("FileName");
+        fileNameText.MarkDirtyRepaint();
+        fileNameText.RegisterValueChangedCallback(evt => _fileName = evt.newValue);
 
-        /*foreach (Node node in currentNC.Nodes)
-        {
-            RefreshNodeAfterClose(node.GetPosition());
-        }*/
+        var saveButton = root.Q<Button>("SaveButton");
+        saveButton.clicked += SaveData;
+        var loadButton = root.Q<Button>("LoadButton");
+        loadButton.clicked += LoadData;
     }   
 
-    public void CreateNode()
+    private void SaveData()
     {
-        CustomNode newNode = new NodeDebug();
-        
-        currentNC.Nodes.Add(newNode);
-        Debug.Log(currentNC.Nodes.Count);
-        
-
-        CodeView.AddElement(newNode);
-
-    }
-
-    /*public void RefreshNodeAfterClose(Rect position)
-    {
-        Node newNode = new NodeInstantiate();
-        newNode.SetPosition(position);
-
-        Debug.Log(currentNC.Nodes.Count);
-
-
-        CodeView.AddElement(newNode);
-    }*/
-
-    private GraphViewChange OnGraphChange(GraphViewChange change)
-    {
-        if (change.elementsToRemove != null)
+        if (string.IsNullOrEmpty(_fileName))
         {
-            foreach (var item in change.elementsToRemove)
-            {
-                CustomNode node = item as CustomNode;
-                if (node != null)
-                {
-                    currentNC.Nodes.Remove(node);
-                    Debug.Log(currentNC.Nodes.Count);
-                }
-            }
+            EditorUtility.DisplayDialog("Empty file name !", "Enter a valid file name", "OK");
+            return;
         }
 
-        return change;
+        var save = Save.GetInstance(CodeView);
+        save.SaveNodeCode(_fileName);
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(_fileName))
+        {
+            EditorUtility.DisplayDialog("Empty file name !", "Enter a valid file name", "OK");
+            return;
+        }
+
+        var load = Save.GetInstance(CodeView);
+        load.LoadNodeCode(_fileName);
     }
 }

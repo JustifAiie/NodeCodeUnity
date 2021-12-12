@@ -10,6 +10,8 @@ public class NodeCodeView : GraphView
 {
     public new class UxmlFactory : UxmlFactory<NodeCodeView, UxmlTraits> { }
 
+    public readonly Vector2 DefaultNodeSize = new Vector2(150, 200);
+
     public NodeCodeView()
     {
         Insert(0, new GridBackground());
@@ -34,12 +36,21 @@ public class NodeCodeView : GraphView
 
         if (evt.target is GraphView)
         {
-            evt.menu.AppendAction("Create", (e) => { NodeCodeEditor.Instance.CreateNode(); });
+            evt.menu.AppendAction("Create", (e) => { CreateNode(); });
         }
         else
         {
             base.BuildContextualMenu(evt);
         }
+    }
+
+    public CustomNode CreateNode()
+    {
+        CustomNode newNode = new NodeDebug();
+
+        AddElement(newNode);
+
+        return newNode;
     }
 
     private CustomNode GenerateStartNode()

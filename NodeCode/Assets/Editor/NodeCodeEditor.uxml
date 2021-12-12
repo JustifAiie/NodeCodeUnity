@@ -1,7 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="NodeCodeEditor.uss" />
     <uie:Toolbar>
-        <uie:ToolbarButton text="Create" display-tooltip-when-elided="true" name="createButton" />
+        <ui:TextField picking-mode="Ignore" label="File Name" value="New Save" text="New Save" name="FileName" />
+        <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveButton" />
+        <ui:Button text="Load" display-tooltip-when-elided="true" name="LoadButton" />
     </uie:Toolbar>
     <SplitView fixed-pane-initial-dimension="550">
         <ui:VisualElement name="leftPanel">

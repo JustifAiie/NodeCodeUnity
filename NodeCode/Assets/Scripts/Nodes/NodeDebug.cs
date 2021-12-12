@@ -18,4 +18,8 @@ public class NodeDebug : CustomNode
         FullRefresh();
     }
 
+    public void Play()
+    {
+        Debug.Log("test");
+    }
 }

@@ -5,4 +5,9 @@ using UnityEngine;
 public class NodeCodeManager : MonoBehaviour
 {
     public NodeCode nodeCode;
+
+    private void Start()
+    {
+        nodeCode.Play();
+    }
 }

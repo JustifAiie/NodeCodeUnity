@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
+[Serializable]
 public class CustomNode : Node
 {
     public string GUID;
@@ -21,5 +22,5 @@ public class CustomNode : Node
         RefreshPorts();
     }
 
-    
+    public void Play() { }
 }
