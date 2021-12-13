@@ -51,7 +51,7 @@ public class Save
             nodeCodeData.Guid = node.GUID;
             nodeCodeData.title = node.title;
             nodeCodeData.Position = node.GetPosition().position;
-            nodeCodeData.PlayMethod += node.Play;
+            nodeCodeData.PlayMethod = node.Play;
 
             nodeCode.NodeCodeData.Add(nodeCodeData);
         }

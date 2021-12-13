@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1fc09d7e3d7fcc44bb54ae7da94bdab, type: 3}
-  m_Name: test
+  m_Name: test3
   m_EditorClassIdentifier: 
   NodeCodeData:
   - title: Debug
-    Guid: 1588954e-ad3a-476d-a212-73358b09c8ce
-    Position: {x: 288, y: 61}
+    Guid: 3d914e60-3fbc-4db1-91b6-869ba60a18ab
+    Position: {x: 222, y: 13}
   LinkData:
-  - BaseNodeGuid: 9a06d6f6-5461-44f8-b1da-915785908176
-    TargetNodeGuid: 1588954e-ad3a-476d-a212-73358b09c8ce
+  - BaseNodeGuid: ebdf30c0-4794-45d8-8ac7-279f3d1130ea
+    TargetNodeGuid: 3d914e60-3fbc-4db1-91b6-869ba60a18ab
     PortName: Next

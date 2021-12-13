@@ -13,7 +13,8 @@ public class NodeCode : ScriptableObject
     {
         foreach(NodeCodeData node in NodeCodeData)
         {
-            Debug.Log("inloop");
+            Debug.Log(node.title);
+            
             node.PlayMethod();
         }
     }
