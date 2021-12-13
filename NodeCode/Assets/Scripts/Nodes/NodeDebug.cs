@@ -18,7 +18,7 @@ public class NodeDebug : CustomNode
         FullRefresh();
     }
 
-    public override void Play()
+    public static void Play()
     {
         Debug.Log("test");
     }

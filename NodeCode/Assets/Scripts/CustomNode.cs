@@ -22,5 +22,4 @@ public class CustomNode : Node
         RefreshPorts();
     }
 
-    public virtual void Play() { }
 }
