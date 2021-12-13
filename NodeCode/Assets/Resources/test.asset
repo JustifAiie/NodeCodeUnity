@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1fc09d7e3d7fcc44bb54ae7da94bdab, type: 3}
   m_Name: test
   m_EditorClassIdentifier: 
-  Nodes: []
   NodeCodeData:
   - title: Debug
-    Guid: f28eed7c-efec-4876-b42f-747efd9c9a9a
-    Position: {x: 103, y: 351}
+    Guid: 9865fe62-d549-4d92-a4d7-164e3e3df316
+    Position: {x: 167, y: -25}
   LinkData:
-  - BaseNodeGuid: bb857f10-1da0-462a-b6c6-4a84ccdfe805
-    TargetNodeGuid: f28eed7c-efec-4876-b42f-747efd9c9a9a
+  - BaseNodeGuid: faf00324-f0b9-4855-9fe0-ca5982d2577e
+    TargetNodeGuid: 9865fe62-d549-4d92-a4d7-164e3e3df316
     PortName: Next

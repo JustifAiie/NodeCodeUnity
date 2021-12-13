@@ -51,6 +51,7 @@ public class Save
             nodeCodeData.Guid = node.GUID;
             nodeCodeData.title = node.title;
             nodeCodeData.Position = node.GetPosition().position;
+            nodeCodeData.PlayMethod += node.Play;
 
             nodeCode.NodeCodeData.Add(nodeCodeData);
         }
@@ -126,7 +127,9 @@ public class Save
             {
                 string targetGuid = dataList[i].TargetNodeGuid;
                 CustomNode target = Nodes.First(x => x.GUID == targetGuid);
-                LinkNodes(node.outputContainer[i].Q<Port>(), (Port)target.inputContainer[0]);
+
+                if (node.outputContainer.childCount != 0)
+                    LinkNodes(node.outputContainer[i].Q<Port>(), (Port)target.inputContainer[0]);
 
                 target.SetPosition(new Rect(
                     _nodeCodeCache.NodeCodeData.First(x => x.Guid == targetGuid).Position,
