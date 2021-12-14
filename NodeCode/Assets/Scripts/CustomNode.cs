@@ -22,4 +22,9 @@ public class CustomNode : Node
         RefreshPorts();
     }
 
+    public virtual List<object> GetParams() 
+    {
+        return new List<object>();
+    }
+
 }

@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -15,12 +17,20 @@ public class NodeCode : ScriptableObject
 
     public void Play()
     {
-        foreach(NodeCodeData node in NodeCodeData)
+        /*foreach(NodeCodeData node in NodeCodeData)
         {
             Debug.Log(node.title);
-            SetPlayMethod(GetAllNodeTypes(), node.title);
+            SetPlayMethod(GetAllNodeTypes(), node.title, node.Parameters);
             _playAction();
+        }*/
+        
+        var info = new DirectoryInfo($"Assets/Resources/{name}Dir/XML");
+        foreach (var file in info.GetFiles("*xml"))
+        {
+            NodeCodeData.Add((NodeCodeData)Deserialize($"Assets/Resources/{name}Dir/XML/{file.Name}"));
         }
+
+        Debug.Log(NodeCodeData[0].Parameters[0].ToString().GetType());
     }
 
     private List<Type> GetAllNodeTypes()
@@ -33,7 +43,7 @@ public class NodeCode : ScriptableObject
         return nodeTypes;
     }
 
-    private void SetPlayMethod(List<Type> types, string typeString)
+    private void SetPlayMethod(List<Type> types, string typeString, List<object> parameters)
     {
         foreach (Type type in types)
         {
@@ -42,9 +52,23 @@ public class NodeCode : ScriptableObject
                 MethodInfo methodInfo = type.GetMethod("Play"); 
                 if (methodInfo != null)
                 {
-                    _playAction = (Action)Delegate.CreateDelegate(typeof(Action), methodInfo);
+                    _playAction = (Action)Delegate.CreateDelegate(typeof(Action), parameters, methodInfo);
                 }
             }
         }
+    }
+
+    private NodeCodeData Deserialize(string fileName)
+    {
+        XmlSerializer xs = new XmlSerializer(typeof(NodeCodeData));
+
+        NodeCodeData data;
+
+        using (Stream reader = new FileStream(fileName, FileMode.Open))
+        {
+            data = (NodeCodeData)xs.Deserialize(reader);
+        }
+
+        return data;
     }
 }

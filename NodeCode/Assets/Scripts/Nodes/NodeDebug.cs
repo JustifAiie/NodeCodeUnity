@@ -25,8 +25,15 @@ public class NodeDebug : CustomNode
         FullRefresh();
     }
 
-    public static void Play()
+    public static void Play(List<object> parameters)
     {
-        Debug.Log("test");
+        Debug.Log((string)parameters[0]);
+    }
+
+    public override List<object> GetParams()
+    {
+        List<object> tmp = new List<object>();
+        tmp.Add(text.value);
+        return tmp;
     }
 }

@@ -10,4 +10,5 @@ public class NodeCodeData
     public string title;
     public string Guid;
     public Vector2 Position;
+    public List<object> Parameters;
 }

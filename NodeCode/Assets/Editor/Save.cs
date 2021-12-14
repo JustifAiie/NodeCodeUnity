@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -29,6 +31,12 @@ public class Save
         if (Edges.Count == 0)
             return;
 
+        if (!AssetDatabase.IsValidFolder("Assets/Resources"))
+            AssetDatabase.CreateFolder("Assets", "Resources");
+
+        AssetDatabase.CreateFolder("Assets/Resources", $"{fileName}Dir");
+        AssetDatabase.CreateFolder($"Assets/Resources/{fileName}Dir", "XML");
+
         NodeCode nodeCode = ScriptableObject.CreateInstance<NodeCode>();
 
         List<Edge> connectedPorts = Edges.Where(x => x.input.node != null).ToList();
@@ -51,14 +59,17 @@ public class Save
             nodeCodeData.Guid = node.GUID;
             nodeCodeData.title = node.title;
             nodeCodeData.Position = node.GetPosition().position;
+            nodeCodeData.Parameters.Add(node.GetParams());
 
-            nodeCode.NodeCodeData.Add(nodeCodeData);
-        }
+            XmlSerializer xs = new XmlSerializer(typeof(NodeCodeData));
+            TextWriter txtWriter = new StreamWriter($"Assets/Resources/{fileName}Dir/XML/{fileName}.xml");
+            xs.Serialize(txtWriter, nodeCodeData);
+            txtWriter.Close();
 
-        if (!AssetDatabase.IsValidFolder("Assets/Resources"))
-            AssetDatabase.CreateFolder("Assets", "Resources");
+            //nodeCode.NodeCodeData.Add(nodeCodeData);
+        }     
 
-        AssetDatabase.CreateAsset(nodeCode, $"Assets/Resources/{fileName}.asset");
+        AssetDatabase.CreateAsset(nodeCode, $"Assets/Resources/{fileName}Dir/{fileName}.asset");
         AssetDatabase.SaveAssets();
     }
 
