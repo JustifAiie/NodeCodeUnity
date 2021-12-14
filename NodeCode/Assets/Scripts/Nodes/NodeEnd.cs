@@ -3,26 +3,18 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class NodeInstantiate : CustomNode
+public class NodeEnd : CustomNode
 {
-    public NodeInstantiate()
+    public NodeEnd()
     {
-        title = "Instantiate";
+        title = "End";
         GUID = System.Guid.NewGuid().ToString();
+        ExitPoint = true;
 
         Port newInputPort = GeneratePort(Direction.Input, typeof(string));
         newInputPort.portName = "Input";
         inputContainer.Add(newInputPort);
 
-        Port newOutputPort = GeneratePort(Direction.Output, typeof(string));
-        newOutputPort.portName = "Output";
-        outputContainer.Add(newOutputPort);
-
         FullRefresh();
-    }
-
-    public static void Play()
-    {
-        GameObject.CreatePrimitive(PrimitiveType.Sphere);
     }
 }

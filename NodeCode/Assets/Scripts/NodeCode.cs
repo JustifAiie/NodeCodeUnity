@@ -17,20 +17,17 @@ public class NodeCode : ScriptableObject
 
     public void Play()
     {
-        /*foreach(NodeCodeData node in NodeCodeData)
+        foreach (NodeCodeData node in NodeCodeData)
         {
-            Debug.Log(node.title);
-            SetPlayMethod(GetAllNodeTypes(), node.title, node.Parameters);
+            SetPlayMethod(GetAllNodeTypes(), node.title);
             _playAction();
-        }*/
-        
-        var info = new DirectoryInfo($"Assets/Resources/{name}Dir/XML");
-        foreach (var file in info.GetFiles("*xml"))
-        {
-            NodeCodeData.Add((NodeCodeData)Deserialize($"Assets/Resources/{name}Dir/XML/{file.Name}"));
         }
 
-        Debug.Log(NodeCodeData[0].Parameters[0].ToString().GetType());
+        /*var info = new DirectoryInfo($"Assets/Resources/{name}Dir/XML");
+        foreach (var file in info.GetFiles("*xml"))
+        {
+            NodeCodeData.Add(Deserialize($"Assets/Resources/{name}Dir/XML/{file.Name}"));
+        }*/
     }
 
     private List<Type> GetAllNodeTypes()
@@ -43,7 +40,7 @@ public class NodeCode : ScriptableObject
         return nodeTypes;
     }
 
-    private void SetPlayMethod(List<Type> types, string typeString, List<object> parameters)
+    private void SetPlayMethod(List<Type> types, string typeString)
     {
         foreach (Type type in types)
         {
@@ -52,7 +49,7 @@ public class NodeCode : ScriptableObject
                 MethodInfo methodInfo = type.GetMethod("Play"); 
                 if (methodInfo != null)
                 {
-                    _playAction = (Action)Delegate.CreateDelegate(typeof(Action), parameters, methodInfo);
+                    _playAction = (Action)Delegate.CreateDelegate(typeof(Action), methodInfo);
                 }
             }
         }

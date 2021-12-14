@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Xml.Serialization;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -34,8 +36,8 @@ public class Save
         if (!AssetDatabase.IsValidFolder("Assets/Resources"))
             AssetDatabase.CreateFolder("Assets", "Resources");
 
-        AssetDatabase.CreateFolder("Assets/Resources", $"{fileName}Dir");
-        AssetDatabase.CreateFolder($"Assets/Resources/{fileName}Dir", "XML");
+        /*AssetDatabase.CreateFolder("Assets/Resources", $"{fileName}Dir");
+        AssetDatabase.CreateFolder($"Assets/Resources/{fileName}Dir", "XML");*/
 
         NodeCode nodeCode = ScriptableObject.CreateInstance<NodeCode>();
 
@@ -53,23 +55,25 @@ public class Save
             nodeCode.LinkData.Add(linkData);
         }
 
-        foreach (CustomNode node in Nodes.Where(node => !node.EntryPoint))
+        foreach (CustomNode node in Nodes.Where(node => !node.EntryPoint && !node.ExitPoint))
         {
             NodeCodeData nodeCodeData = new NodeCodeData();
             nodeCodeData.Guid = node.GUID;
+            nodeCodeData.type = node.GetType().FullName;
             nodeCodeData.title = node.title;
             nodeCodeData.Position = node.GetPosition().position;
-            nodeCodeData.Parameters.Add(node.GetParams());
+            
+            //nodeCodeData.Parameters.Add(node.GetParams());
 
-            XmlSerializer xs = new XmlSerializer(typeof(NodeCodeData));
+            /*XmlSerializer xs = new XmlSerializer(typeof(NodeCodeData));
             TextWriter txtWriter = new StreamWriter($"Assets/Resources/{fileName}Dir/XML/{fileName}.xml");
             xs.Serialize(txtWriter, nodeCodeData);
-            txtWriter.Close();
+            txtWriter.Close();*/
 
-            //nodeCode.NodeCodeData.Add(nodeCodeData);
-        }     
+            nodeCode.NodeCodeData.Add(nodeCodeData);
+        }
 
-        AssetDatabase.CreateAsset(nodeCode, $"Assets/Resources/{fileName}Dir/{fileName}.asset");
+        AssetDatabase.CreateAsset(nodeCode, $"Assets/Resources/{fileName}.asset");
         AssetDatabase.SaveAssets();
     }
 
@@ -94,7 +98,7 @@ public class Save
 
         foreach (CustomNode node in Nodes)
         {
-            if (node.EntryPoint)
+            if (node.EntryPoint || node.ExitPoint)
                 continue;
 
             foreach (Edge edge in Edges)
@@ -113,11 +117,10 @@ public class Save
     {
         foreach (NodeCodeData data in _nodeCodeCache.NodeCodeData)
         {
-            CustomNode tmp = _target.CreateNode();
+            Type type = GetTypeFix(data.type);
+            CustomNode tmp = _target.CreateNode(type);
             tmp.GUID = data.Guid;
             _target.AddElement(tmp);
-
-
         }
     }
 
@@ -139,7 +142,10 @@ public class Save
                 CustomNode target = Nodes.First(x => x.GUID == targetGuid);
 
                 if (node.outputContainer.childCount != 0)
-                    LinkNodes(node.outputContainer[i].Q<Port>(), (Port)target.inputContainer[0]);
+                {
+                    Debug.Log(node.title + " " + target.title);
+                    LinkNodes(node.outputContainer[0].Q<Port>(), (Port)target.inputContainer[0]);
+                }
 
                 target.SetPosition(new Rect(
                     _nodeCodeCache.NodeCodeData.First(x => x.Guid == targetGuid).Position,
@@ -160,5 +166,42 @@ public class Save
         tmp?.input.Connect(tmp);
         tmp?.output.Connect(tmp);
         _target.Add(tmp);
+    }
+
+    public static Type GetTypeFix(string TypeName)
+    {
+        var type = Type.GetType(TypeName);
+
+        if (type != null)
+            return type;
+
+        if (TypeName.Contains("."))
+        {
+            var assemblyName = TypeName.Substring(0, TypeName.IndexOf('.'));
+
+            var assembly = Assembly.Load(assemblyName);
+            if (assembly == null)
+                return null;
+
+            type = assembly.GetType(TypeName);
+            if (type != null)
+                return type;
+
+        }
+
+        var currentAssembly = Assembly.GetExecutingAssembly();
+        var referencedAssemblies = currentAssembly.GetReferencedAssemblies();
+        foreach (var assemblyName in referencedAssemblies)
+        {
+            var assembly = Assembly.Load(assemblyName);
+            if (assembly != null)
+            {
+                type = assembly.GetType(TypeName);
+                if (type != null)
+                    return type;
+            }
+        }
+
+        return null;
     }
 }

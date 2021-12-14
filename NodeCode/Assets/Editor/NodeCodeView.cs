@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -32,11 +33,16 @@ public class NodeCodeView : GraphView
     }
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
-    {   
+    {
+        List<Type> typeList = GetAllNodeTypes();
 
         if (evt.target is GraphView)
         {
-            evt.menu.AppendAction("Create", (e) => { CreateNode(); });
+            foreach (Type type in typeList)
+            {
+                evt.menu.AppendAction(type.Name.Substring(4), (e) => { CreateNode(type); });
+
+            }
         }
         else
         {
@@ -44,10 +50,9 @@ public class NodeCodeView : GraphView
         }
     }
 
-    public CustomNode CreateNode()
+    public CustomNode CreateNode(Type type)
     {
-        CustomNode newNode = new NodeDebug();
-
+        var newNode = (CustomNode)Activator.CreateInstance(type);
         AddElement(newNode);
 
         return newNode;
@@ -58,7 +63,7 @@ public class NodeCodeView : GraphView
         CustomNode startNode = new CustomNode
         {
             title = "Start",
-            GUID = System.Guid.NewGuid().ToString(),
+            GUID = Guid.NewGuid().ToString(),
             EntryPoint = true,
         };
 
@@ -83,5 +88,15 @@ public class NodeCodeView : GraphView
         });
 
         return compatiblePorts;
+    }
+
+    private List<Type> GetAllNodeTypes()
+    {
+        List<Type> nodeTypes = (from domainAssembly in AppDomain.CurrentDomain.GetAssemblies()
+                                from assemblyType in domainAssembly.GetTypes()
+                                where assemblyType.IsSubclassOf(typeof(CustomNode))
+                                select assemblyType).ToList();
+
+        return nodeTypes;
     }
 }

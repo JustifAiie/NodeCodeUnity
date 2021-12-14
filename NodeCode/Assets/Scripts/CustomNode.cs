@@ -10,6 +10,7 @@ public class CustomNode : Node
     public string GUID;
 
     public bool EntryPoint = false;
+    public bool ExitPoint = false;
 
     public Port GeneratePort(Direction portDirection, Type type, Port.Capacity capacity = Port.Capacity.Single)
     {

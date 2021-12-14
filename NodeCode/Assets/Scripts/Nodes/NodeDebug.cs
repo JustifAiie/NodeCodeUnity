@@ -8,32 +8,36 @@ using UnityEngine.UIElements;
 
 public class NodeDebug : CustomNode
 {
-    TextField text = new TextField();
+    //TextField text = new TextField();
 
     public NodeDebug()
     {
         title = "Debug";
         GUID = System.Guid.NewGuid().ToString();
 
-        Port newPort = GeneratePort(Direction.Input, typeof(string));
-        newPort.portName = "Input";
-        inputContainer.Add(newPort);
+        Port newInputPort = GeneratePort(Direction.Input, typeof(string));
+        newInputPort.portName = "Input";
+        inputContainer.Add(newInputPort);
 
-        
-        extensionContainer.Add(text);
+        Port newOutputPort = GeneratePort(Direction.Output, typeof(string));
+        newOutputPort.portName = "Output";
+        outputContainer.Add(newOutputPort);
+
+
+        //extensionContainer.Add(text);
 
         FullRefresh();
     }
 
-    public static void Play(List<object> parameters)
+    public static void Play()
     {
-        Debug.Log((string)parameters[0]);
+        Debug.Log("test");
     }
 
-    public override List<object> GetParams()
+    /*public override List<object> GetParams()
     {
         List<object> tmp = new List<object>();
         tmp.Add(text.value);
         return tmp;
-    }
+    }*/
 }
