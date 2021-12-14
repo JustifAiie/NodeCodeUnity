@@ -15,12 +15,12 @@ MonoBehaviour:
   NodeCodeData:
   - title: Debug
     type: NodeDebug
-    Guid: 840f8d6d-32bc-4ba0-84a1-5f7ecdbcdf4e
-    Position: {x: 80, y: 149}
+    Guid: 3a45c7e4-1896-4da0-84eb-0e1c06d5a204
+    Position: {x: 138, y: -56}
   LinkData:
-  - BaseNodeGuid: eb0a4a38-644f-4d44-bfff-73fe2496e760
-    TargetNodeGuid: 840f8d6d-32bc-4ba0-84a1-5f7ecdbcdf4e
+  - BaseNodeGuid: 0335fed7-bcc8-4d9d-9640-9f617b85b634
+    TargetNodeGuid: 3a45c7e4-1896-4da0-84eb-0e1c06d5a204
     PortName: Next
-  - BaseNodeGuid: 840f8d6d-32bc-4ba0-84a1-5f7ecdbcdf4e
-    TargetNodeGuid: 56d26018-d063-495e-afee-7d4df765d1cb
+  - BaseNodeGuid: 3a45c7e4-1896-4da0-84eb-0e1c06d5a204
+    TargetNodeGuid: db6a50ca-a1b9-42cd-8500-2831f655c6a6
     PortName: Output

@@ -140,10 +140,10 @@ public class Save
             {
                 string targetGuid = dataList[i].TargetNodeGuid;
                 CustomNode target = Nodes.First(x => x.GUID == targetGuid);
-
+                Debug.Log(node.title + " " + target.title);
                 if (node.outputContainer.childCount != 0)
                 {
-                    Debug.Log(node.title + " " + target.title);
+                    
                     LinkNodes(node.outputContainer[0].Q<Port>(), (Port)target.inputContainer[0]);
                 }
 
