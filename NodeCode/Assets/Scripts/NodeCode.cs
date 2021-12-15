@@ -13,7 +13,7 @@ public class NodeCode : ScriptableObject
     public List<NodeCodeData> NodeCodeData = new List<NodeCodeData>();
     public List<LinkData> LinkData = new List<LinkData>();
 
-    public bool canGoNext = true;
+    [HideInInspector] public bool canGoNext = true;
 
     private delegate void _playDelegate(List<string> parameters);
     private _playDelegate _playMethod;
