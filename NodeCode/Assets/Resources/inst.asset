@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1fc09d7e3d7fcc44bb54ae7da94bdab, type: 3}
-  m_Name: test
+  m_Name: inst
   m_EditorClassIdentifier: 
   NodeCodeData:
-  - title: Debug
-    type: NodeDebug
-    Guid: db16b3fb-8bc0-45c4-92c2-b697e6c0b4c2
-    Position: {x: 119, y: 0}
+  - title: Instantiate
+    type: NodeInstantiate
+    Guid: a6a9e67e-a51b-4f74-98ac-a358545d036d
+    Position: {x: 107, y: -9}
     Parameters:
-    - bgbg
+    - Cube
   - title: End
     type: NodeEnd
-    Guid: b15dfad4-5987-45d0-8ed7-02d24e6dc1f6
-    Position: {x: 310, y: 0}
+    Guid: f2d7164f-8eba-431d-9d8c-209c722191e8
+    Position: {x: 290, y: 0}
     Parameters: []
   LinkData:
-  - BaseNodeGuid: cd921c59-1a33-4b93-9d0c-ca272584b6af
-    TargetNodeGuid: db16b3fb-8bc0-45c4-92c2-b697e6c0b4c2
+  - BaseNodeGuid: 10356cc5-bafc-4922-9c07-c2c23d1346a7
+    TargetNodeGuid: a6a9e67e-a51b-4f74-98ac-a358545d036d
     PortName: Next
-  - BaseNodeGuid: db16b3fb-8bc0-45c4-92c2-b697e6c0b4c2
-    TargetNodeGuid: b15dfad4-5987-45d0-8ed7-02d24e6dc1f6
+  - BaseNodeGuid: a6a9e67e-a51b-4f74-98ac-a358545d036d
+    TargetNodeGuid: f2d7164f-8eba-431d-9d8c-209c722191e8
     PortName: Output
   canGoNext: 1

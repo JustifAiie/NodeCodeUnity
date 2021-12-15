@@ -1,18 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class NodeDebug : CustomNode
+public class NodeWait : CustomNode
 {
-    TextField text = new TextField();
+    IntegerField seconds = new IntegerField();
 
-    public NodeDebug()
+    public NodeWait()
     {
-        title = "Debug";
+        title = "Wait";
         GUID = System.Guid.NewGuid().ToString();
 
         Port newInputPort = GeneratePort(Direction.Input, typeof(string));
@@ -23,14 +23,14 @@ public class NodeDebug : CustomNode
         newOutputPort.portName = "Output";
         outputContainer.Add(newOutputPort);
 
-        extensionContainer.Add(text);
+        extensionContainer.Add(seconds);
 
         FullRefresh();
     }
 
-    public NodeDebug(List<string> parameters)
+    public NodeWait(List<string> parameters)
     {
-        title = "Debug";
+        title = "Wait";
         GUID = System.Guid.NewGuid().ToString();
 
         Port newInputPort = GeneratePort(Direction.Input, typeof(string));
@@ -41,23 +41,28 @@ public class NodeDebug : CustomNode
         newOutputPort.portName = "Output";
         outputContainer.Add(newOutputPort);
 
-        text.value = parameters[0];
+        seconds.value = Int32.Parse(parameters[0]);
 
-        extensionContainer.Add(text);
+        extensionContainer.Add(seconds);
 
         FullRefresh();
     }
 
     public void Play(List<string> parameters)
     {
-        Debug.Log(parameters[0]);
+        NodeCodeManager.Instance.StartCoroutine(WaitCoroutine(Int32.Parse(parameters[0])));
+    }
+
+    private IEnumerator WaitCoroutine(int seconds)
+    {
+        yield return new WaitForSeconds(seconds);
         SetCanGoNext(true);
     }
 
     public override List<string> GetParams()
     {
         List<string> tmp = new List<string>();
-        tmp.Add(text.value);
+        tmp.Add(seconds.value.ToString());
         return tmp;
     }
 }

@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class NodeCodeManager : MonoBehaviour
 {
+    public static NodeCodeManager Instance;
     public NodeCode nodeCode;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {

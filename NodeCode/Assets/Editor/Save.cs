@@ -55,15 +55,14 @@ public class Save
             nodeCode.LinkData.Add(linkData);
         }
 
-        foreach (CustomNode node in Nodes.Where(node => !node.EntryPoint && !node.ExitPoint))
+        foreach (CustomNode node in Nodes.Where(node => !node.EntryPoint))
         {
             NodeCodeData nodeCodeData = new NodeCodeData();
             nodeCodeData.Guid = node.GUID;
             nodeCodeData.type = node.GetType().FullName;
             nodeCodeData.title = node.title;
             nodeCodeData.Position = node.GetPosition().position;
-            
-            //nodeCodeData.Parameters.Add(node.GetParams());
+            nodeCodeData.Parameters = node.GetParams();
 
             /*XmlSerializer xs = new XmlSerializer(typeof(NodeCodeData));
             TextWriter txtWriter = new StreamWriter($"Assets/Resources/{fileName}Dir/XML/{fileName}.xml");
@@ -98,7 +97,7 @@ public class Save
 
         foreach (CustomNode node in Nodes)
         {
-            if (node.EntryPoint || node.ExitPoint)
+            if (node.EntryPoint)
                 continue;
 
             foreach (Edge edge in Edges)
@@ -118,7 +117,7 @@ public class Save
         foreach (NodeCodeData data in _nodeCodeCache.NodeCodeData)
         {
             Type type = GetTypeFix(data.type);
-            CustomNode tmp = _target.CreateNode(type);
+            CustomNode tmp = _target.CreateNode(type, data.Parameters);
             tmp.GUID = data.Guid;
             _target.AddElement(tmp);
         }
@@ -126,32 +125,32 @@ public class Save
 
     private void ConnectNodes()
     {
-        List<LinkData> dataList = new List<LinkData>();
+        LinkData nodeData = new LinkData();
 
         foreach (CustomNode node in Nodes)
         {
+
             foreach (LinkData data in _nodeCodeCache.LinkData)
             {
                 if (data.BaseNodeGuid == node.GUID)
-                    dataList.Add(data);
+                    nodeData = data;
             }
 
-            for (int i = 0; i < dataList.Count; i++)
-            {
-                string targetGuid = dataList[i].TargetNodeGuid;
-                CustomNode target = Nodes.First(x => x.GUID == targetGuid);
-                Debug.Log(node.title + " " + target.title);
-                if (node.outputContainer.childCount != 0)
-                {
-                    
-                    LinkNodes(node.outputContainer[0].Q<Port>(), (Port)target.inputContainer[0]);
-                }
+            string targetGuid = nodeData.TargetNodeGuid;
+            CustomNode target = Nodes.First(x => x.GUID == targetGuid);
 
-                target.SetPosition(new Rect(
-                    _nodeCodeCache.NodeCodeData.First(x => x.Guid == targetGuid).Position,
-                    _target.DefaultNodeSize
-                ));
+            if (node == target)
+                break;
+
+            if (node.outputContainer.childCount != 0)
+            {            
+                LinkNodes(node.outputContainer[0].Q<Port>(), (Port)target.inputContainer[0]);
             }
+
+            target.SetPosition(new Rect(
+                _nodeCodeCache.NodeCodeData.First(x => x.Guid == targetGuid).Position,
+                _target.DefaultNodeSize
+            ));
         }
     }
 

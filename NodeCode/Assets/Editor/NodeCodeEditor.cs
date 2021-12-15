@@ -5,38 +5,35 @@ using UnityEditor.UIElements;
 using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.Events;
+using System.IO;
 
 public class NodeCodeEditor : EditorWindow
 {
-    public static NodeCodeEditor Instance;
+    public static NodeCodeEditor Window;
 
-    public Button CreateButton;
     public NodeCodeView CodeView;
 
     private string _fileName;
+    private NodeCodeManager _nodeCodeManager;
     
     [MenuItem("Node Code/Editor")]
     public static void OpenWindow()
     {
-        NodeCodeEditor wnd = GetWindow<NodeCodeEditor>();
-        wnd.Show();
+        Window = GetWindow<NodeCodeEditor>();
+        Window.Show();
     }
 
     public void CreateGUI()
     {
-        Instance = this;
-
-        // Each editor window contains a root VisualElement object
         VisualElement root = rootVisualElement;
 
-        // Import UXML
         var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/NodeCodeEditor.uxml");
         visualTree.CloneTree(root);
 
-        // A stylesheet can be added to a VisualElement.
-        // The style will be applied to the VisualElement and all of its children.
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/NodeCodeEditor.uss");
         root.styleSheets.Add(styleSheet);
+
+        _nodeCodeManager = GameObject.Find("NodeCodeManager").GetComponent<NodeCodeManager>();
 
         CodeView = root.Q<NodeCodeView>();
 
@@ -48,6 +45,10 @@ public class NodeCodeEditor : EditorWindow
         saveButton.clicked += SaveData;
         var loadButton = root.Q<Button>("LoadButton");
         loadButton.clicked += LoadData;
+        var applyButton = root.Q<Button>("ApplyButton");
+        applyButton.clicked += ApplyNodeCode;
+        var playButton = root.Q<Button>("PlayButton");
+        playButton.clicked += PlayFromEditor;
     }   
 
     private void SaveData()
@@ -72,5 +73,23 @@ public class NodeCodeEditor : EditorWindow
 
         var load = Save.GetInstance(CodeView);
         load.LoadNodeCode(_fileName);
+    }
+
+    private void ApplyNodeCode()
+    {
+        NodeCode toApply = (NodeCode)AssetDatabase.LoadAssetAtPath($"Assets/Resources/{_fileName}.asset", typeof(NodeCode));
+
+        if (toApply == null)
+            EditorUtility.DisplayDialog("Wrong file name !", "Could not find a NodeCode matching the file name", "OK");
+        else
+            _nodeCodeManager.nodeCode = toApply;
+    }
+
+    private void PlayFromEditor()
+    {
+        if (_nodeCodeManager.nodeCode == null)
+            EditorUtility.DisplayDialog("No NodeCode specified !", "Can't enter Play mode because no NodeCode has been specified in NodeCodeManager", "OK");
+        else
+            EditorApplication.ExecuteMenuItem("Edit/Play");
     }
 }

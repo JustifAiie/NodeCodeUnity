@@ -13,6 +13,8 @@ public class NodeCodeView : GraphView
 
     public readonly Vector2 DefaultNodeSize = new Vector2(150, 200);
 
+    private Vector2 _mousePos = new Vector2();
+
     public NodeCodeView()
     {
         Insert(0, new GridBackground());
@@ -21,10 +23,6 @@ public class NodeCodeView : GraphView
         this.AddManipulator(new ContentDragger());
         this.AddManipulator(new SelectionDragger());
         this.AddManipulator(new RectangleSelector());
-        /*this.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
-        {
-            Debug.Log("Right click !");
-        }));*/
 
         var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/NodeCodeEditor.uss");
         styleSheets.Add(styleSheet);
@@ -38,10 +36,10 @@ public class NodeCodeView : GraphView
 
         if (evt.target is GraphView)
         {
+            _mousePos = evt.localMousePosition;
             foreach (Type type in typeList)
             {
                 evt.menu.AppendAction(type.Name.Substring(4), (e) => { CreateNode(type); });
-
             }
         }
         else
@@ -50,9 +48,19 @@ public class NodeCodeView : GraphView
         }
     }
 
-    public CustomNode CreateNode(Type type)
+    public CustomNode CreateNode(Type type, List<string> parameters = null)
     {
-        var newNode = (CustomNode)Activator.CreateInstance(type);
+        CustomNode newNode;
+        if (parameters == null)
+            newNode = (CustomNode)Activator.CreateInstance(type);
+        else
+            newNode = (CustomNode)Activator.CreateInstance(type, parameters);
+
+        newNode.SetPosition(new Rect(
+            _mousePos,
+            DefaultNodeSize
+        ));
+
         AddElement(newNode);
 
         return newNode;

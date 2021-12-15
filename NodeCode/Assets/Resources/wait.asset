@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1fc09d7e3d7fcc44bb54ae7da94bdab, type: 3}
+  m_Name: wait
+  m_EditorClassIdentifier: 
+  NodeCodeData:
+  - title: Wait
+    type: NodeWait
+    Guid: 6373cdcc-08a8-4532-817a-29c0c7b5bca7
+    Position: {x: 112, y: 0}
+    Parameters:
+    - 4
+  - title: Debug
+    type: NodeDebug
+    Guid: 0cc2f21b-068e-4312-891e-a6863072e87a
+    Position: {x: 289, y: 0}
+    Parameters:
+    - sheesh
+  - title: End
+    type: NodeEnd
+    Guid: eb1a9eb9-6a0a-4e1f-990a-538c3a9dd63e
+    Position: {x: 456, y: 0}
+    Parameters: []
+  LinkData:
+  - BaseNodeGuid: 0c5cea4e-0bd5-4b27-9272-4bfeca9f56a7
+    TargetNodeGuid: 6373cdcc-08a8-4532-817a-29c0c7b5bca7
+    PortName: Next
+  - BaseNodeGuid: 6373cdcc-08a8-4532-817a-29c0c7b5bca7
+    TargetNodeGuid: 0cc2f21b-068e-4312-891e-a6863072e87a
+    PortName: Output
+  - BaseNodeGuid: 0cc2f21b-068e-4312-891e-a6863072e87a
+    TargetNodeGuid: eb1a9eb9-6a0a-4e1f-990a-538c3a9dd63e
+    PortName: Output
+  canGoNext: 1

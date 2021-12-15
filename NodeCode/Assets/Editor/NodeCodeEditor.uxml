@@ -4,15 +4,8 @@
         <ui:TextField picking-mode="Ignore" label="File Name" value="New Save" text="New Save" name="FileName" />
         <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveButton" />
         <ui:Button text="Load" display-tooltip-when-elided="true" name="LoadButton" />
+        <ui:Button text="Apply" display-tooltip-when-elided="true" name="ApplyButton" style="flex-wrap: nowrap; flex-direction: column; align-items: stretch; -unity-text-align: middle-center; flex-basis: auto; left: auto;" />
+        <ui:Button text="Play" display-tooltip-when-elided="true" name="PlayButton" />
     </uie:Toolbar>
-    <SplitView fixed-pane-initial-dimension="550">
-        <ui:VisualElement name="leftPanel">
-            <ui:Label text="Node Code View" display-tooltip-when-elided="true" style="background-color: rgb(37, 37, 37);" />
-            <NodeCodeView focusable="true" style="flex-grow: 1;" />
-        </ui:VisualElement>
-        <ui:VisualElement name="rightPanel">
-            <ui:Label text="Inspector" display-tooltip-when-elided="true" style="background-color: rgb(37, 37, 37);" />
-            <InspectorView name="InspectorView" />
-        </ui:VisualElement>
-    </SplitView>
+    <NodeCodeView focusable="true" style="flex-grow: 1;" />
 </ui:UXML>

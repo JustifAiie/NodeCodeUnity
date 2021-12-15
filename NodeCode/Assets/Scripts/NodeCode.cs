@@ -13,21 +13,31 @@ public class NodeCode : ScriptableObject
     public List<NodeCodeData> NodeCodeData = new List<NodeCodeData>();
     public List<LinkData> LinkData = new List<LinkData>();
 
-    private Action _playAction = () => { };
+    public bool canGoNext = true;
+
+    private delegate void _playDelegate(List<string> parameters);
+    private _playDelegate _playMethod;
 
     public void Play()
     {
-        foreach (NodeCodeData node in NodeCodeData)
-        {
-            SetPlayMethod(GetAllNodeTypes(), node.title);
-            _playAction();
-        }
+        NodeCodeManager.Instance.StartCoroutine(WaitForNodeCoroutine());
 
         /*var info = new DirectoryInfo($"Assets/Resources/{name}Dir/XML");
         foreach (var file in info.GetFiles("*xml"))
         {
             NodeCodeData.Add(Deserialize($"Assets/Resources/{name}Dir/XML/{file.Name}"));
         }*/
+    }
+
+    private IEnumerator WaitForNodeCoroutine()
+    {
+        foreach (NodeCodeData node in NodeCodeData)
+        {
+            canGoNext = false;
+            SetPlayMethod(GetAllNodeTypes(), node.title);
+            _playMethod(node.Parameters);
+            yield return new WaitUntil(() => canGoNext);
+        }
     }
 
     private List<Type> GetAllNodeTypes()
@@ -46,10 +56,10 @@ public class NodeCode : ScriptableObject
         {
             if (type.ToString().Contains(typeString))
             {
-                MethodInfo methodInfo = type.GetMethod("Play"); 
+                MethodInfo methodInfo = type.GetMethod("Play");            
                 if (methodInfo != null)
                 {
-                    _playAction = (Action)Delegate.CreateDelegate(typeof(Action), methodInfo);
+                    _playMethod = (_playDelegate)Delegate.CreateDelegate(typeof(_playDelegate), Activator.CreateInstance(type), methodInfo);
                 }
             }
         }

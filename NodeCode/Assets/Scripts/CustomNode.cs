@@ -23,9 +23,14 @@ public class CustomNode : Node
         RefreshPorts();
     }
 
-    public virtual List<object> GetParams() 
+    public void SetCanGoNext(bool state)
     {
-        return new List<object>();
+        NodeCodeManager.Instance.nodeCode.canGoNext = state;
+    }
+
+    public virtual List<string> GetParams() 
+    {
+        return new List<string>();
     }
 
 }
